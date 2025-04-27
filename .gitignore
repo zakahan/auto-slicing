@@ -1,0 +1,4 @@
+.idea/
+.models/
+api/logs
+api/.env
