@@ -14,7 +14,7 @@ def get_logger(name: str, log_file_name='uvicorn.log'):
     console_handler.setLevel(logging.DEBUG)
     console_handler.setFormatter(formatter)
 
-    log_dir = os.path.join(LOG_CONFIG_PATH, 'logs')
+    log_dir = os.path.join(os.path.dirname(LOG_CONFIG_PATH), 'logs')
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
     file_handler = logging.FileHandler(os.path.join(log_dir, log_file_name))

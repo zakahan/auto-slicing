@@ -1,4 +1,6 @@
 .idea/
 .models/
-api/logs
-api/.env
+src/logs
+logs
+src/.env
+.venv/

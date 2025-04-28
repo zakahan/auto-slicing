@@ -1,0 +1,7 @@
+[project]
+name = "auto-slicing"
+version = "0.1.0"
+description = "auto slicing video stream."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
