@@ -11,6 +11,5 @@ def get_analysis_agent():
         name="text_analysis_agent",
         instruction=prompt.AGENT_INSTRUCTION,
         description=prompt.AGENT_DESCRIPTION,
-
     )
 
