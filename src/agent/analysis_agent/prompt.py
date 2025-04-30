@@ -6,8 +6,8 @@ AGENT_DESCRIPTION = """
 """
 
 AGENT_INSTRUCTION = """
-输入信息将会以jsonl的格式提供给你，每个json包括两个字段，"id"和"text"。
-其中id是编号，text是这段内容的文本。你必须审查text中哪里有值得提取的部分，并将这些部分选出来。
+文字内容分为多个切片，将会以jsonl的格式提供给你，每个json包括两个字段，"id"和"text"。
+其中id是编号，按时间顺序唯一标识一条切片，text是这段内容的文本。你必须审查text中哪里有值得提取的部分，并将这些部分选出来。
 并且给出一个总结作为切片视频的标题。
 你的返回内容应该如下
 output_message = "```json

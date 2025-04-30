@@ -4,12 +4,12 @@ from ..model import create_inference_model
 from prompt import AGENT_DESCRIPTION,AGENT_INSTRUCTION
 
 
-# 直接同步就行了 = = || 先不整mcp了 感觉没必要
-def get_analysis_agent():
+
+def get_clip_agent():
     return LlmAgent(
         model=create_inference_model(),
-        name="text_analysis_agent",
-        instruction=AGENT_INSTRUCTION,
+        name="clip_agent",
         description=AGENT_DESCRIPTION,
+        instruction=AGENT_INSTRUCTION,
+        tools=[]
     )
-

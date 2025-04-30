@@ -1,29 +1,16 @@
-import logging
+
 import os
+from loguru import logger
 from pathlib import Path
 
-LOG_CONFIG_PATH = Path(__file__).parent.resolve()     # 获取当前文件的
+CONFIG_MODULE_DIR = Path(__file__).parent.resolve()
 
-def get_logger(name: str, log_file_name='uvicorn.log'):
-    logger = logging.getLogger(name)
-    logger.setLevel(logging.DEBUG)
+os.environ["LOGURU_LEVEL"] = "INFO"
 
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.DEBUG)
-    console_handler.setFormatter(formatter)
-
-    log_dir = os.path.join(os.path.dirname(LOG_CONFIG_PATH), 'logs')
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
-    file_handler = logging.FileHandler(os.path.join(log_dir, log_file_name))
-    file_handler.setLevel(logging.INFO)
-    file_handler.setFormatter(formatter)
-
-    logger.addHandler(console_handler)
-    logger.addHandler(file_handler)
-
+def get_logger(module_name:str, file_name="app.log"):
+    log_path = os.path.join(os.path.dirname(CONFIG_MODULE_DIR), "logs", file_name)
+    logger.add(log_path, rotation="500 MB", retention="10 days",# level="INFO",
+               format="{time} | {level} | " + module_name + ":{function}:{line} - {message}")
     return logger
 
 
