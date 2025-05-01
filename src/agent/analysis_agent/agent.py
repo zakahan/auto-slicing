@@ -11,5 +11,6 @@ def get_analysis_agent():
         name="text_analysis_agent",
         instruction=AGENT_INSTRUCTION,
         description=AGENT_DESCRIPTION,
+        output_key="analysis_result"
     )
 

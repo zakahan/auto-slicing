@@ -4,3 +4,13 @@ src/logs
 logs
 src/.env
 .venv/
+kb/
+# 忽略所有的 __pycache__ 目录
+__pycache__/
+
+# 忽略所有的 logs 目录
+logs/
+
+# 忽略所有的 .env 文件
+.env
+
