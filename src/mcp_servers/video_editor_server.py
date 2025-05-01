@@ -1,6 +1,6 @@
 import os.path as op
 from dotenv import load_dotenv
-load_dotenv(op.join(op.dirname(op.dirname(__file__)), ".env"))
+load_dotenv(op.join(op.dirname(__file__), ".env"))
 
 import os
 import shutil
