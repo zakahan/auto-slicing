@@ -25,14 +25,15 @@ class AnalysisProcessor:
         
         pass
 
-    async def run(self, query: str) -> str:
+    async def run(self, query: str, introduction:str) -> str:
         agent = get_analysis_agent()
         runner = Runner(
             app_name=self.app_name,
             agent=agent, 
             session_service=self.session_service
         )
-        content = types.Content(role='user', parts=[types.Part(text=query)])
+        prompt=f"首先给你介绍一下主播的基本信息：{introduction}，切片内容分别如下：{str(query)}"
+        content = types.Content(role='user', parts=[types.Part(text=prompt)])
         events_async = runner.run_async(
             session_id=self.session_id,
             user_id=self.user_id,
@@ -46,8 +47,10 @@ class AnalysisProcessor:
         return ""
 
     def get_session_state(self) -> dict:
-        return self.session_service.get_session(
-            app_name=self.app_name,
-            user_id=self.user_id,
-            session_id=self.session_id
+        return dict(
+            self.session_service.get_session(
+                app_name=self.app_name,
+                user_id=self.user_id,
+                session_id=self.session_id
+            )
         )

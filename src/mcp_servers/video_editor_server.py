@@ -70,7 +70,13 @@ mcp = FastMCP(
 """
 
 # 实际处理
-def clip_video(original_video_path: str, save_folder: str, start_time: int, stop_time: int) -> tuple[bool, str, str]:
+def clip_video(
+        original_video_path: str,
+        save_folder: str,
+        start_time: int,
+        stop_time: int,
+        title: str,
+) -> tuple[bool, str, str]:
     """
     剪切视频并保存到指定文件夹
     :param original_video_path: 原视频文件的路径
@@ -105,7 +111,7 @@ def clip_video(original_video_path: str, save_folder: str, start_time: int, stop
             return False, "", error_msg
 
     # 生成输出文件路径
-    output_path = os.path.join(save_folder, f"result{file_extension}")
+    output_path = os.path.join(save_folder, f"{title}{file_extension}")
 
     try:
         # 构建 FFmpeg 命令
@@ -214,7 +220,13 @@ def copy_file(source_file:str, target_folder:str) -> bool:
 # --------------------------------------------------------------------------
 # mcp-tools注册
 @mcp.tool()
-def clip_video_tool(original_video_path: str, task_id: str, start_time: int, stop_time: int) -> dict:
+def clip_video_tool(
+        original_video_path: str,
+        task_id: str,
+        start_time: int,
+        stop_time: int,
+        title: str,
+) -> dict:
     """
     Clip a video based on the given start and stop times.
     
@@ -223,7 +235,7 @@ def clip_video_tool(original_video_path: str, task_id: str, start_time: int, sto
     task_id (str): The unique identifier for the clipping task.
     start_time (int): The start time (in some appropriate unit) for the clipping.
     stop_time (int): The stop time (in some appropriate unit) for the clipping.
-
+    task_id (str): title: the title of the clipping.
     Returns:
     dict: A dictionary containing the result of the clipping operation.
           The dictionary has the following keys:
@@ -234,7 +246,8 @@ def clip_video_tool(original_video_path: str, task_id: str, start_time: int, sto
     # 要保证，每次输入都是基于KB的，每次输出也都是基于KB的
     _original_video_path = os.path.join(KB_DIR, original_video_path)
     _save_folder = os.path.join(KB_DIR, KB_CLIP, task_id)
-    success, output_path, message = clip_video(_original_video_path, _save_folder, start_time, stop_time)
+    success, output_path, message = clip_video(
+        _original_video_path, _save_folder, start_time, stop_time, title)
     return {"success": success, "message": message, "output_path": output_path[len(KB_DIR)+1:]}
 
 

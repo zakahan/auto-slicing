@@ -1,7 +1,7 @@
 from google.adk.agents import LlmAgent
 from google.adk.runners import Runner
 from ..model import create_inference_model
-from prompt import AGENT_DESCRIPTION,AGENT_INSTRUCTION
+from .prompt import AGENT_DESCRIPTION,AGENT_INSTRUCTION
 
 
 # 直接同步就行了 = = || 先不整mcp了 感觉没必要
