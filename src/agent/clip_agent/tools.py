@@ -20,6 +20,20 @@ async def aget_video_editor_tools():
             ]
         )
     )
+    tools, exist_stack = await MCPToolset.from_server(
+        connection_params=StdioServerParameters(
+            command="python",
+            args=[
+                mcp_tool_path,
+                "--kb_dir",
+                os.getenv("KB_BASE_PATH"),      # MCP_LOGGER_FILE_DIR
+                "--using_logger",
+                os.getenv("MCP_USING_LOGGER"),
+                "--logger_file_dir",
+                os.getenv("MCP_LOGGER_FILE_DIR"),
+            ],
+        )
+    )
     logger.debug("Video Editor MCP Toolset Created Successfully.")
     
     return tools, exist_stack

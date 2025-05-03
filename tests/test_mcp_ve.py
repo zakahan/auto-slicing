@@ -3,8 +3,8 @@ import os.path as op
 from dotenv import load_dotenv
 load_dotenv(op.join(op.dirname(op.dirname(__file__)), "src/.env"))
 
-from mcp_servers.video_editor_server import clip_video, clip_video_tool
-from mcp_servers.video_editor_server import merge_videos, merge_videos_tool
+from mcp_servers.vedit_mcp import clip_video, clip_video_tool
+from mcp_servers.vedit_mcp import merge_videos, merge_videos_tool
 
 
 print(os.getenv("KB_RAW_PATH"))
