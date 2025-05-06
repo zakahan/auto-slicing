@@ -18,14 +18,14 @@ introduction= """
 千舰主播：2022 年 3 月生日会达成千舰成就，大航海最高人数达 2183（截至 2023 年 1 月），位列 B 站虚拟主播头部梯队。
 3D 化与跨界：2023 年 1 月首次举办 3D 直播，并参与 B 站冰火歌会、BW 线下活动等，逐渐从游戏主播向全能型 VUP 转型。
 """
-
-root_pcr = RootProcessor()
-
 query = {
         "task_id":"007",
         "raw_video":"raw/【直播回放】不动如山 2025年01月06日20点场.mp4",
         "introduction":introduction
 }
+
+
+root_pcr = RootProcessor()
 
 asyncio.run(
     root_pcr.run(
