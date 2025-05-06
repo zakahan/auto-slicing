@@ -43,7 +43,7 @@ class ClipProcessor:
         3. start_time:{query['start_time']}
         4. stop_time:{query['stop_time']}
         5. title: {query['title']} 
-        请完成剪辑任务
+        请完成剪辑任务，注意，每次任务结束后，都要调用任务结束对应的工具。
 
         """
         content = types.Content(role='user', parts=[types.Part(text=prompt)])

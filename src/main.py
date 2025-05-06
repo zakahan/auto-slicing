@@ -4,16 +4,10 @@ from dotenv import load_dotenv
 # 加载.env文件中的环境变量
 load_dotenv()
 
-
-# exit()
-
 from processor.root_processor import RootProcessor
 
 
-root_pcr = RootProcessor()
-
-
-introduction_azi="""
+introduction= """
 雫るる_Official 是一位活跃于 B 站的虚拟主播（VTuber），以银发、眼镜、猫耳等二次元形象和中日双语互动为特色，被粉丝亲切称为 “露露” 或 “露胖”。她的直播内容多元，包括游戏实况（如《英雄联盟》《Apex》）、中日文化交流、歌曲翻唱（如《勾指起誓》《小手拉大手》）以及日常杂谈，尤其擅长以自然真实的风格与观众互动。
 核心亮点：
 语言能力与文化融合
@@ -25,13 +19,16 @@ introduction_azi="""
 3D 化与跨界：2023 年 1 月首次举办 3D 直播，并参与 B 站冰火歌会、BW 线下活动等，逐渐从游戏主播向全能型 VUP 转型。
 """
 
+root_pcr = RootProcessor()
 
+query = {
+        "task_id":"007",
+        "raw_video":"raw/【直播回放】不动如山 2025年01月06日20点场.mp4",
+        "introduction":introduction
+}
 
-print(len(introduction_azi))
 asyncio.run(
     root_pcr.run(
-        task_id="007",
-        raw_video="raw/【直播回放】不动如山 2025年01月06日20点场.mp4",
-        introduction=introduction_azi
+        query=query
     )
 )

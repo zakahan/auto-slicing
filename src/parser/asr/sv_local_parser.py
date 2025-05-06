@@ -106,8 +106,8 @@ class SVLocalParser(Parser):
         input_format = input_audio.split('.')[-1]
         audio = AudioSegment.from_file(input_audio, format=input_format)
         # 获取时间戳
-        timestamps = self.get_timestamps(input_audio, threshold_second=1)       # 要求至少是一秒
-
+        # timestamps = self.get_timestamps(input_audio, threshold_second=1)       # 要求至少是一秒
+        timestamps = self.vad_detect(input_audio)
         # 遍历时间戳并切割音频，输出到文件夹
         for i, (beg, end) in enumerate(timestamps):
             # 切割音频片段

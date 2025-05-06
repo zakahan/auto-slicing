@@ -4,7 +4,7 @@ from google.genai import types
 from google.adk.sessions import InMemorySessionService
 from google.adk.artifacts.in_memory_artifact_service import InMemoryArtifactService 
 from log_config import get_logger
-logger = get_logger(__name__)
+logger = get_logger()
 
 
 class AnalysisProcessor:

@@ -34,7 +34,7 @@ class SubtitlesProcessor:
         self.srt_base_path = os.path.join(os.getenv("KB_BASE_PATH"), "srt")
         pass
 
-    def run(self, query: dict) -> str:
+    def run(self, query: dict) -> dict:
         task_id = query['task_id']
         asr_list = query['asr_list']
         
