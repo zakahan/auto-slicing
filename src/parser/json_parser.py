@@ -8,7 +8,9 @@ def jsonl_fuzzy_parser(text:str) -> list[dict]:
     return json_repair.loads(text)
 
 def json2dict(file_path: str) -> dict:
-    return json.load(file_path)
+    with open(file_path, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+        return data
 
 def dict2json(file_path: str) -> bool:
     return json.dump(file_path)
