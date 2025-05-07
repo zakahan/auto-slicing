@@ -3,7 +3,7 @@ from .analysis_processor import AnalysisProcessor
 from .clip_processor import ClipProcessor
 from .subtitles_processor import SubtitlesProcessor
 from .remove_processor import RemoveProcessor
-from parser.json_parser import jsonl_parser
+from parser.json_parser import jsonl_fuzzy_parser
 from log_config import get_logger
 logger = get_logger()
 
@@ -43,7 +43,7 @@ class RootProcessor:
 
         for aly_res in aly_results:
             try:
-                prompt_clp_task_query.extend(jsonl_parser(aly_res))
+                prompt_clp_task_query.extend(jsonl_fuzzy_parser(aly_res))
             except Exception as e:
                 logger.error("json_repair error"+str(e))
 

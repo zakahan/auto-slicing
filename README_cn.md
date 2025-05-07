@@ -45,7 +45,7 @@ pip install -r requirements.txt
 
 #### 1.3 配置ffmpeg
 
-`vedit-mcp`依赖`ffmpeg`实现，因此请配置ffmpeg
+本项目剪辑部分是由[`zakahan/vedit-mcp`](https://github.com/zakahan/vedit-mcp)实现的，该部分依赖`ffmpeg`实现，因此请配置ffmpeg
 
 ```bash
 # ubuntu

@@ -4,24 +4,16 @@ from dotenv import load_dotenv
 # 加载.env文件中的环境变量
 load_dotenv()
 
+from parser.json_parser import json2dict
 from processor.root_processor import RootProcessor
 
 
-introduction= """
-雫るる_Official 是一位活跃于 B 站的虚拟主播（VTuber），以银发、眼镜、猫耳等二次元形象和中日双语互动为特色，被粉丝亲切称为 “露露” 或 “露胖”。她的直播内容多元，包括游戏实况（如《英雄联盟》《Apex》）、中日文化交流、歌曲翻唱（如《勾指起誓》《小手拉大手》）以及日常杂谈，尤其擅长以自然真实的风格与观众互动。
-核心亮点：
-语言能力与文化融合
-露露坚持学习中文多年，已通过 HSK 六级考试，能流畅使用中文直播和回应弹幕。她常分享日本生活趣事（如探店 vlog），也会用中文吐槽中国网友的玩梗文化，形成独特的 “中日混搭” 风格。例如，她曾因粉丝误将 “宫崎县” 特产认作中国制造而展开趣味对赌直播。
-粉丝互动与抗压能力
-露露以高互动性著称，会直接回复弹幕、处理私信问题（如 2025 年 4 月直播中公开批评恶意私信），甚至在粉丝群中 “窥屏” 参与讨论。尽管早期因文化差异与粉丝产生摩擦（如对 “debu” 等词的误解），但她通过真诚沟通逐渐建立起信任，粉丝群氛围以轻松和支持为主。
-职业成就与突破
-千舰主播：2022 年 3 月生日会达成千舰成就，大航海最高人数达 2183（截至 2023 年 1 月），位列 B 站虚拟主播头部梯队。
-3D 化与跨界：2023 年 1 月首次举办 3D 直播，并参与 B 站冰火歌会、BW 线下活动等，逐渐从游戏主播向全能型 VUP 转型。
-"""
+introduction= json2dict("introduction.json")
+
 query = {
         "task_id":"007",
         "raw_video":"raw/【直播回放】不动如山 2025年01月06日20点场.mp4",
-        "introduction":introduction
+        "introduction":introduction["雫るる_Official"]
 }
 
 

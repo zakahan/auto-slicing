@@ -33,7 +33,7 @@ pip install - r requirements.txt
 
 #### 1.3 Configure ffmpeg
 
-`vedit - mcp` depends on `ffmpeg` to work, so please configure ffmpeg.
+The video edit parts depends on [`zakahan/vedit-mcp`](https://github.com/zakahan/vedit-mcp), which depends on `ffmpeg` to work, so please configure ffmpeg.
 
 ```bash
 # Ubuntu
