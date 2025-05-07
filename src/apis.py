@@ -1,10 +1,9 @@
 import os
 import shutil
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Body
 from dotenv import load_dotenv
-
 load_dotenv()
-
+from processor.root_processor import RootProcessor
 app = FastAPI()
 
 UPLOAD_DIR = os.path.join(os.getenv("KB_BASE_PATH"), "raw")
@@ -31,7 +30,7 @@ def get_file_list() -> list[dict]:
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/list-files", response_model=list[dict[str, str]])
+@app.get("/list-files", response_model=list[str])
 def list_files():
     """获取文件列表接口"""
     try:
@@ -85,3 +84,21 @@ async def create_upload_file(
         return {"message": f"File {file_name} uploaded successfully", "path": f"raw/{file_name}"}
 
     return {"message": f"Chunk {chunk_number} of {file_name} uploaded successfully", "path": f"raw/{file_name}"}
+
+
+
+@app.post("/submit")
+async def create_task(
+    task_id: str = Body(..., description="task id such as uuid"),
+    raw_path: str =  Body(..., description="raw path"),
+    introduction: str = Body(..., description="introduction of TV anchor")
+):
+    query = {
+        "task_id": task_id,
+        "raw_video": raw_path,
+        "introduction": introduction
+    }
+    root_prc = RootProcessor()
+    result = await root_prc.run(query=query)
+    return result
+    

@@ -71,4 +71,4 @@ class RootProcessor:
         })
 
         # remove
-        return {'success': "success"}
+        return {'state': "success"}
