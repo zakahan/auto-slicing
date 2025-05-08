@@ -1,5 +1,6 @@
 import os
 import json
+import secrets
 import requests
 import streamlit as st
 from streamlit_option_menu import option_menu
@@ -18,6 +19,11 @@ st.set_page_config(
 options_dict = json2dict("introduction.json")
 options = list(options_dict.keys())
 
+# 在代码开头初始化 session_state
+if "submit" not in st.session_state:
+    st.session_state.submit = False
+if "item_list" not in st.session_state:
+    st.session_state.item_list = None
 if "introduction" not in st.session_state:
     st.session_state.introduction = options_dict[options[0]]
 if "kb_base_path" not in st.session_state:
@@ -62,26 +68,26 @@ def list_existing_file_list():
 
 def submit_root_processor():
     API_URL =  "http://127.0.0.1:8090/submit"
-    response = requests.post(API_URL)
+    response = requests.post(
+        API_URL,
+        json={
+            'task_id': secrets.token_hex(4),
+            'raw_path': st.session_state.raw_path,
+            'introduction': st.session_state.introduction
+        }
+        )
     if response.status_code == 200:
         return response.json()
     else:
-        return {"state": "fail"}
+        return {}
 
 menu1 = 'upload'
 menu2 = 'existing'
 # state group
 with st.sidebar:
     st.title("☝️🤓💡切片剪辑神器")
-    submit = st.button("✅开始处理流程", disabled=st.session_state.raw_path is None)
-    # fixed_height = "50px"
-    # border_style = "1px solid #ccc"
-    # st.markdown(
-    #     f'<div style="height: {fixed_height}; overflow-y: auto; border: {border_style};">'
-    #     f'{st.session_state.raw_path if st.session_state.raw_path is not None else ""}'
-    #     f'</div>',
-    #     unsafe_allow_html=True
-    # )
+    if st.button("✅开始处理流程", disabled=st.session_state.raw_path is None):
+        st.session_state.submit = True  # 点击时将状态设为 True
 
     menu = option_menu("视频读取方式", [menu1, menu2],
                     icons=['upload', "chat-square-text"],
@@ -109,16 +115,11 @@ with st.sidebar:
     else:
         raw_path_list = list_existing_file_list()
         # st.markdown(raw_path_list)
-        st.session_state.raw_path = st.selectbox("👀请从已经存在的文件中选择", raw_path_list, index=0)
+        st.session_state.raw_path = st.selectbox("👀请从已经存在的文件中选择", raw_path_list)
         
     
     
 if st.session_state.raw_path is not None:
-    # # st.button("这个时候才允许后续处理")
-    # st.subheader("raw_video")
-    # st.markdown(st.session_state.raw_path)
-    # st.subheader("introduction")
-    # st.markdown(st.session_state.introduction)
 
     fixed_height = "50px"
     col1, col2 = st.columns(2)
@@ -130,7 +131,45 @@ if st.session_state.raw_path is not None:
         st.markdown(
             f'**选定主播**： {selected_option}'
         )
-if submit:
-    x = submit_root_processor()
-    st.success(x)
+if st.session_state.submit:
+    if st.session_state.item_list is None:
+        st.session_state.item_list = submit_root_processor()
+    # st.success(st.session_state.item_list)
+    for i, item in enumerate(st.session_state.item_list):
+        # def callback(path=item["path"]):  # 使用默认参数捕获当前的 item["path"]
+            
+        with st.expander(f"{i}_{item['title']}"):
+            sub_col1, sub_col2 = st.columns([9,1])
+            with sub_col1:
+                st.write(item['path'])
+            with sub_col2:
+                video_source_id = f"vid_{item['path']}"
+                tog = st.toggle('📽️', key=video_source_id)
+                # todo: 这里展示视频
+                
+            if tog:
+                st.markdown("ovo")
+                # st.session_state.video_path = item['path']
+                # 这里偷懒了，不一定是mp4...算了，凑合凑合得了
+                st.video(st.session_state.video_path, format="video/mp4")
+            else:
+                st.markdown("x_x")
+
     pass
+
+
+
+
+# """
+# sub_col1, sub_col2 = st.columns([9,1])
+#             with sub_col1:
+#                 st.write(item['path'])
+#             with sub_col2:
+#                 video_source_id = f"vid_{item['path']}"
+#                 tog = st.toggle('📽️', key=video_source_id)
+#                 # todo: 这里展示视频
+#                 if tog:
+#                     st.markdown("ovo")
+#                 else:
+#                     st.markdown("x_x")
+# """

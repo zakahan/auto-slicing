@@ -1,11 +1,25 @@
+import os
 from .asr_processor import ASRProcessor
 from .analysis_processor import AnalysisProcessor
 from .clip_processor import ClipProcessor
 from .subtitles_processor import SubtitlesProcessor
 from .remove_processor import RemoveProcessor
 from parser.json_parser import jsonl_fuzzy_parser
+import glob
 from log_config import get_logger
 logger = get_logger()
+
+
+
+def find_video_files(directory: str) -> list[dict[str, str]]:
+    video_extensions = ('.mp4', '.avi', '.mov')
+    video_files: list[dict[str, str]] = []
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.lower().endswith(video_extensions):
+                file_path = os.path.join(root, file)
+                video_files.append({"title": file, "path": file_path})
+    return video_files
 
 
 class RootProcessor:
@@ -13,7 +27,19 @@ class RootProcessor:
         self.is_create_subtitles = is_create_subtitles
         pass
 
+    def _get_video_path(self, task_id_list: list[str]) -> list[dict]:
+        res_list = []
+        for task_id in task_id_list:
+            dir_path = os.path.join(os.getenv("KB_BASE_PATH"), "result", task_id)
+            v_list = find_video_files(dir_path)
+            res_list.extend(v_list)
+        
+        
+        return res_list
+
+
     async def run(self, query: dict) -> dict:
+        task_id_list = []
         task_id = query['task_id']
         raw_video = query['raw_video']
         introduction = query['introduction']
@@ -59,10 +85,13 @@ class RootProcessor:
                 "stop_time": clp_task["stop_time"],
                 "title": clp_task['title']
             }
+            task_id_list.append(f"{task_id}_{i}")
             clp = await clp_prc.run(query)
             logger.info(f"{task_id}_{i}: {clp}")
+            if i > 4:
+                break
             pass
-
+        
         rme_prc = RemoveProcessor()
         rme_prc.run({
             'remove_queue': [
@@ -70,5 +99,6 @@ class RootProcessor:
             ]
         })
 
-        # remove
-        return {'state': "success"}
+
+        return self._get_video_path(task_id_list)
+

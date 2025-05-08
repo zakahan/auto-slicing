@@ -19,8 +19,12 @@ query = {
 
 root_pcr = RootProcessor()
 
-asyncio.run(
+x= asyncio.run(
     root_pcr.run(
         query=query
     )
 )
+
+
+for item in x:
+    print(item)

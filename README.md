@@ -91,11 +91,15 @@ The overall architecture diagram is as follows.
 For the specific implementation, you can directly refer to the `src/processor` part of the code. This is the entry point of each module, and the overall idea is very clear in the diagram.
 
 ## ✅TODO LIST
-- [ ] Graphical interface. Consider using streamlit to create a graphical interface.
-- [ ] Expand `vedit - mcp`. Currently, it only supports basic editing functions and needs further support.
-- [ ] Add subtitle - adding function.
-- [ ] Add the API call method for speech recognition.
+- [x] Graphical user interface: Consider using Streamlit to create a graphical user interface.
+- [ ] Implement support for the ASR API to break free from local inference limitations.
+- [ ] Expand `vedit - mcp`. Currently, it only supports basic editing functions, and further support needs to be provided.
+- [ ] Add the subtitle - adding function.
+- [ ] Add the API calling method for speech recognition.
+- [ ] Add the cover generation function. First, create a simple version.
+- [ ] Consider support for singing livestreams.
+- [ ] Consider using speaker separation to support scenarios with non - single sound signals, such as game livestreams and video - watching livestreams. 
 
 ## 🔥Latest News
 
-None.
+- 2025-05-08, a simple web UI interface was implemented using Streamlit.
