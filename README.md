@@ -71,16 +71,26 @@ Note: Absolute paths are recommended for the above paths.
 
 ### 2. Start the project
 
-#### 2.1 Parameter configuration
+(Choose either 2.1 or 2.2)
 
-Please modify the query part in `src/main.py` according to your needs.
+### 2.1 Script Startup
 
-Note: `raw_video` must be a path relative to `KB_BASE_PATH`. This design is to reduce the possibility of path errors during the call of the large model.
+Please modify the `query` section in `src/main.py` according to your requirements.
+
+Note: `raw_video` must be a path relative to `KB_BASE_PATH`. This design is to reduce the possibility of path errors when the large model is being invoked.
 
 ```bash
 cd src
 python main.py
 ```
+
+### 2.2 Web UI
+
+```bash
+bash start_up.sh
+```
+
+Then you can access the Web UI. 
 
 ## 🫡Introduction to the Implementation
 

@@ -90,7 +90,9 @@ cp .env.example .env
 
 ### 2. 启动项目
 
-#### 2.1 参数配置
+（2.1和2.2任选一个）
+
+#### 2.1 脚本启动
 
 请修改 `src/main.py`中的query部分，修改为你需要的
 
@@ -103,6 +105,13 @@ python main.py
 ```
 
 
+#### 2.2 webui
+
+```bash
+bash start_up.sh
+```
+
+进入webui即可
 
 
 
