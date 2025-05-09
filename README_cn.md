@@ -14,7 +14,7 @@
 
 前提条件：
 
-- 显存>=16GB，更小的本人并没有试过
+- 显存>=8GB，更小的本人并没有试过
 
 - 内存>=32GB
 
@@ -64,7 +64,10 @@ sudo apt install ffmpeg
 
 注：此部分目前仅支持本地推理，api方式可能会在后续支持
 
-
+- 另一种方式，可以选择网盘下载
+> 通过网盘分享的文件：iic.zip
+> 链接: https://pan.baidu.com/s/128FIp4k8qGez5pjBAP9Pbg?pwd=6rfi 提取码: 6rfi 
+> --来自百度网盘超级会员v8的分享
 
 #### 1.5. 配置环境变量
 
@@ -127,7 +130,7 @@ bash start_up.sh
 
 
 
-## ✅TODOLIST
+## ✅Todo List
 
 - [x] 图形化界面，考虑用streamlit做一个图形化界面
 - [ ] 实现对asr api的支持，脱离本地推理限制

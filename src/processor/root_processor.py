@@ -88,14 +88,13 @@ class RootProcessor:
             task_id_list.append(f"{task_id}_{i}")
             clp = await clp_prc.run(query)
             logger.info(f"{task_id}_{i}: {clp}")
-            if i > 4:
-                break
             pass
         
         rme_prc = RemoveProcessor()
         rme_prc.run({
             'remove_queue': [
-                'slice'
+                'slice',
+                'clip'
             ]
         })
 

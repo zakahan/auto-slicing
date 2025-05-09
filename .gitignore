@@ -16,3 +16,6 @@ logs/
 .env
 
 .DS_Store
+.vscode/
+
+requirements-dev.txt

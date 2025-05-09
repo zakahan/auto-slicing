@@ -81,6 +81,22 @@ def submit_root_processor():
     else:
         return {}
 
+def get_video_mime_type(path):
+    """根据文件路径获取视频MIME类型（常见格式映射）"""
+    if not path:
+        return "video/mp4"  # 默认格式
+    ext = os.path.splitext(path)[1].lower().lstrip('.')  # 获取扩展名并去除点号
+    mime_map = {
+        "mp4": "video/mp4",
+        "avi": "video/x-msvideo",
+        "mov": "video/quicktime",
+        "mkv": "video/x-matroska",
+        "flv": "video/x-flv",
+        "wmv": "video/x-ms-wmv"
+    }
+    return mime_map.get(ext, "video/mp4")  # 未知格式默认使用mp4
+    
+
 menu1 = 'upload'
 menu2 = 'existing'
 # state group
@@ -140,36 +156,23 @@ if st.session_state.submit:
             
         with st.expander(f"{i}_{item['title']}"):
             sub_col1, sub_col2 = st.columns([9,1])
-            with sub_col1:
-                st.write(item['path'])
+            
             with sub_col2:
                 video_source_id = f"vid_{item['path']}"
                 tog = st.toggle('📽️', key=video_source_id)
                 # todo: 这里展示视频
-                
+            with sub_col1:
+                if tog:
+                    st.markdown(" ovo")
+                else:
+                    st.markdown(" x_x")
             if tog:
-                st.markdown("ovo")
-                # st.session_state.video_path = item['path']
-                # 这里偷懒了，不一定是mp4...算了，凑合凑合得了
-                st.video(st.session_state.video_path, format="video/mp4")
+                st.session_state.video_path = item['path']
+                video_format = get_video_mime_type(st.session_state.video_path)
+                st.video(st.session_state.video_path, format=video_format)
             else:
-                st.markdown("x_x")
+                pass
 
     pass
 
 
-
-
-# """
-# sub_col1, sub_col2 = st.columns([9,1])
-#             with sub_col1:
-#                 st.write(item['path'])
-#             with sub_col2:
-#                 video_source_id = f"vid_{item['path']}"
-#                 tog = st.toggle('📽️', key=video_source_id)
-#                 # todo: 这里展示视频
-#                 if tog:
-#                     st.markdown("ovo")
-#                 else:
-#                     st.markdown("x_x")
-# """

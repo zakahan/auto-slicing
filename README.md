@@ -1,4 +1,4 @@
-# Auto - Slicing
+# auto-slicing
 
 Automated Slicing: This is a project that realizes the automated slicing of recorded videos through ASR + LLM Agent.
 
@@ -11,7 +11,7 @@ Automated Slicing: This is a project that realizes the automated slicing of reco
 #### 1.1 Clone the project or download the zip package directly
 
 Prerequisites:
-- Video memory >= 16GB. I haven't tried with less.
+- Video memory >= 8GB. I haven't tried with less.
 - Memory >= 32GB.
 
 #### 1.2 Configure the Python environment
@@ -100,7 +100,7 @@ The overall architecture diagram is as follows.
 
 For the specific implementation, you can directly refer to the `src/processor` part of the code. This is the entry point of each module, and the overall idea is very clear in the diagram.
 
-## ✅TODO LIST
+## ✅Todo List
 - [x] Graphical user interface: Consider using Streamlit to create a graphical user interface.
 - [ ] Implement support for the ASR API to break free from local inference limitations.
 - [ ] Expand `vedit - mcp`. Currently, it only supports basic editing functions, and further support needs to be provided.
