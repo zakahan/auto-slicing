@@ -29,7 +29,7 @@ Prerequisites:
 
 #### 1.2 Configure the Python environment
 
-Python version: Theoretically, Python `3.9 - 3.12` can be used. There were some problems with `3.13` before, and it's not clear if they have been fixed now.
+Python version: Theoretically, Python `3.11 - 3.12` can be used. There were some problems with `3.13` before, and it's not clear if they have been fixed now.
 
 1. It is recommended to use uv to install
 
