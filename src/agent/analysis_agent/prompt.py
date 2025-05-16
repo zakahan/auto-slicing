@@ -1,4 +1,5 @@
-import textwrap  
+import textwrap
+from utils.workflow_type import WorkflowType
 
 AGENT_DESCRIPTION = """
 你是一个热点信息捕捉专家，你现在要做这样的一个任务：
@@ -19,35 +20,34 @@ AGENT_INSTRUCTION = """
 3. 招笑瞳姐觉得自己穿过的衣服能卖2w一件🤣【星瞳】
 4. 瞳姐难绷互联网大厂员工不知道工作站电脑开机键在哪【星瞳】
 """
+
+
 # 此处特别致谢恨也迷人，偷了几个标题，用来给LLM参考学习
 
 
-def get_analysis_prompt(query: str, introduction:str, key:str = 'easy'):
-    easy_prompt = textwrap.dedent(
-    f"""
-    ### 你的返回内容应该采取如下的形式
-    ```json
-    [
-        {{
-            "start_time": "来自于输入的start_time字段，表示要切分的视频的开始，而且要讲清楚前因后果",
-            "stop_time": "来自于输入的stop_time字段，表示要切分的的视频的结束"而且要讲清楚前因后果,
-            "title": "表示这段切片视频的标题",
-        }},
-        // 如果你认为这一段录播有多个值得切片的地方，请你继续提出，并且要求前后切片不能有重叠，但你不要切太多，切片的精髓是关键！而不是堆数量！
-    ]
-    ```\n\n""" 
-    )
+def get_analysis_prompt(content: str, introduction: str, key: str = 'easy'):
+    match key:
+        case WorkflowType.EASY:
+            front_prompt = textwrap.dedent(
+                f"""
+                ### 你的返回内容应该采取如下的形式
+                ```json
+                [
+                    {{
+                        "start_time": "来自于输入的start_time字段，表示要切分的视频的开始，而且要讲清楚前因后果",
+                        "stop_time": "来自于输入的stop_time字段，表示要切分的的视频的结束"而且要讲清楚前因后果,
+                        "title": "表示这段切片视频的标题",
+                    }},
+                    // 如果你认为这一段录播有多个值得切片的地方，请你继续提出，并且要求前后切片不能有重叠，但你不要切太多，切片的精髓是关键！而不是堆数量！
+                ]
+                ```\n\n"""
+            )
+        case WorkflowType.TWO_STEP:
+            front_prompt = textwrap.dedent(
+                "暂时我还没想明白咋搞这个，其实前面clip的那个也是我瞎编的，这部分没想好"
+            )
+        case _:
+            raise KeyError(f"Please set a usable key. I don't know what this '{key}' you found is.")
 
-    two_step_prompt = textwrap.dedent(
-        "暂时我还没想明白咋搞这个，其实前面clip的那个也是我瞎编的，这部分没想好"
-    )
-
-    prompt_dict = {
-        'easy': easy_prompt,
-        'two_step': two_step_prompt
-    }   
-    if key not in prompt_dict:
-        raise KeyError(f"Please set a usable key. I don't know what this '{key}' you found is.")
-
-    back_prompt = f"### 首先给你介绍一下主播的基本信息：\n{introduction}，\n### 切片内容分别如下：\n{str(query)}"
-    return prompt_dict[key] + back_prompt
+    back_prompt = f"### 首先给你介绍一下主播的基本信息：\n{introduction}，\n### 切片内容分别如下：\n{str(content)}"
+    return front_prompt + back_prompt

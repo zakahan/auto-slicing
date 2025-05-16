@@ -34,8 +34,6 @@ class RootProcessor:
             dir_path = os.path.join(os.getenv("KB_BASE_PATH"), "result", task_id)
             v_list = find_video_files(dir_path)
             res_list.extend(v_list)
-        
-        
         return res_list
 
 
@@ -52,14 +50,21 @@ class RootProcessor:
             query={
                 "input_audio": raw_video,
                 "task_id": asr_task_id
-        })
+            }
+        )
         
         # 分析阶段 ---------------------------------------------------------
         aly_pcr = AnalysisProcessor()
-        aly_task_id_group = [f"{task_id}_aly_{i}" for i in range(len(asr_results['batch']))]
+        # aly_task_id_group = [f"{task_id}_aly_{i}" for i in range(len(asr_results['batch']))]
         aly_results = []
-        for i, aly_task_id in enumerate(aly_task_id_group):
-            aly = await aly_pcr.run(asr_results['batch'][i], introduction)
+        for i in range(len(asr_results['batch'])):
+            aly = await aly_pcr.run(
+                query={
+                    'content': str(asr_results['batch'][i]),
+                    'introduction': introduction
+                },
+                prompt_key=self.prompt_key
+            )
             aly_results.append(aly)
             pass
 
