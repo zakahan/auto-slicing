@@ -1,5 +1,7 @@
 # auto-slicing
 
+[English](README_en.md) | [简体中文](README.md)
+
 ### Summarize in One Sentence
 Automated Slicing: This is a project that realizes the automated slicing of recorded videos through ASR + LLM Agent.
 
@@ -13,7 +15,7 @@ Automated Slicing: This is a project that realizes the automated slicing of reco
 - Yes, there is, bro.
 - Take a look at "auto-slicing". You take care of the recorded broadcast, and it takes care of the slicing.  
 
-[English](README_en.md) | [简体中文](README.md)
+
 
 ## 👀Quick Start
 

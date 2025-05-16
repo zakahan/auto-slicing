@@ -1,5 +1,6 @@
 # auto-slicing
 
+[English](README_en.md) | [简体中文](README.md)
 
 ### 一句话概括
 
@@ -15,7 +16,7 @@
 - 有的，有的兄弟。
 - 来看看`auto-slicing`吧，你来搞定录播，它来搞定切片。
 
-[English](README_en.md) | [简体中文](README.md)
+
 
 ## 👀快速开始
 

@@ -23,8 +23,9 @@ def find_video_files(directory: str) -> list[dict[str, str]]:
 
 
 class RootProcessor:
-    def __init__(self, is_create_subtitles=False):
+    def __init__(self, is_create_subtitles:bool=False, prompt_key:str='easy'):
         self.is_create_subtitles = is_create_subtitles
+        self.prompt_key = prompt_key
         pass
 
     def _get_video_path(self, task_id_list: list[str]) -> list[dict]:
@@ -86,7 +87,7 @@ class RootProcessor:
                 "title": clp_task['title']
             }
             task_id_list.append(f"{task_id}_{i}")
-            clp = await clp_prc.run(query)
+            clp = await clp_prc.run(query, prompt_key=self.prompt_key)
             logger.info(f"{task_id}_{i}: {clp}")
             pass
         

@@ -1,4 +1,4 @@
-from agent.analysis_agent import get_analysis_agent
+from agent.analysis_agent import get_analysis_agent, get_analysis_prompt
 from google.adk.runners import Runner
 from google.genai import types
 from google.adk.sessions import InMemorySessionService
@@ -25,14 +25,14 @@ class AnalysisProcessor:
         
         pass
 
-    async def run(self, query: str, introduction:str) -> str:
+    async def run(self, query: str, introduction:str, prompt_key: str='easy') -> str:
         agent = get_analysis_agent()
         runner = Runner(
             app_name=self.app_name,
             agent=agent, 
             session_service=self.session_service
         )
-        prompt=f"首先给你介绍一下主播的基本信息：{introduction}，切片内容分别如下：{str(query)}"
+        prompt=get_analysis_prompt(query, introduction, prompt_key)
         content = types.Content(role='user', parts=[types.Part(text=prompt)])
         events_async = runner.run_async(
             session_id=self.session_id,
