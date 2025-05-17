@@ -34,7 +34,6 @@ Python version: Theoretically, Python `3.11 - 3.12` can be used. There were some
 1. It is recommended to use uv to install
 
 ```bash
-cd vedit - mcp
 uv pip install - r requirements.txt
 ```
 

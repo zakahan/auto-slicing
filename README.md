@@ -41,7 +41,6 @@ python版本：理论上python  `3.11~3.12`均可，`3.13`之前遇到过一些�
 1. 推荐使用uv安装
 
 ```bash
-cd vedit-mcp
 uv pip install -r requirements.txt
 ```
 
