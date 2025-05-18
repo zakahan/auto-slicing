@@ -14,7 +14,7 @@ Automated Slicing: This is a project that realizes the automated slicing of reco
 - You say that your love is charming and you're really determined, but it still requires a lot of operation. So, is there any simple yet powerful way to slice the video?
 - Yes, there is, bro.
 - Take a look at "auto-slicing". You take care of the recorded broadcast, and it takes care of the slicing.  
-
+- Currently, it is still at a relatively ordinary stage. Waiting for multiple rounds of optimization.
 
 
 ## 👀Quick Start
