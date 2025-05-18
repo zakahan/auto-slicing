@@ -43,6 +43,11 @@ uv pip install - r requirements.txt
 pip install - r requirements.txt
 ```
 
+Note: If there is an error related to pillow during the installation process, you can
+```bash
+sudo apt-get install -y libjpeg-dev zlib1g-dev
+```
+
 #### 1.3 Configure ffmpeg
 
 The video edit parts depends on [`zakahan/vedit-mcp`](https://github.com/zakahan/vedit-mcp), which depends on `ffmpeg` to work, so please configure ffmpeg.
@@ -58,7 +63,7 @@ sudo apt install ffmpeg
 - For audio analysis, including speech recognition and speech interruption detection. Please refer to:
   - https://github.com/FunAudioLLM/SenseVoice
   - [modelscope - iic/SenseVoiceSmall](https://www.modelscope.cn/models/iic/SenseVoiceSmall) - corresponding to SENSE_VOICE_MODEL_PATH
-  - [modelscope - icc/vad_fsmmn](https://www.modelscope.cn/models/iic/speech_fsmn_vad_zh - cn - 16k - common - pytorch/summary) - corresponding to SENSE_VOICE_VAD_MODEL_PATH
+  - [modelscope - icc/vad_fsmmn](https://www.modelscope.cn/models/iic/speech_fsmn_vad_zh-cn-16k-common-pytorch/summary) - corresponding to SENSE_VOICE_VAD_MODEL_PATH
 
 Note: This part currently only supports local inference, and the API method may be supported in the future.
 
@@ -113,15 +118,17 @@ The overall architecture diagram is as follows.
 For the specific implementation, you can directly refer to the `src/processor` part of the code. This is the entry point of each module, and the overall idea is very clear in the diagram.
 
 ## ✅Todo List
-- [x] Graphical user interface: Consider using Streamlit to create a graphical user interface.
-- [ ] Implement support for the ASR API to break free from local inference limitations.
-- [ ] Expand `vedit - mcp`. Currently, it only supports basic editing functions, and further support needs to be provided.
-- [ ] Add the subtitle - adding function.
+- [ ] Add prompt switching to support opening and closing titles.
+- [ ] Implement support for the ASR API to break away from local inference limitations.
+- [ ] Expand `vedit-mcp`. Currently, it only supports basic editing functions and more support is needed.
+- [ ] Add the function of adding subtitles.
 - [ ] Add the API calling method for speech recognition.
-- [ ] Add the cover generation function. First, create a simple version.
-- [ ] Consider support for singing livestreams.
-- [ ] Consider using speaker separation to support scenarios with non - single sound signals, such as game livestreams and video - watching livestreams. 
+- [ ] Add the function of generating covers. First, create a simple version.
+- [ ] Consider support for song live streams.
+- [ ] Consider using speaker separation to support scenarios where the sound signals are not unique, such as game live streams and watching video live streams.
+
 
 ## 🔥Latest News
 
-- 2025-05-08, a simple web UI interface was implemented using Streamlit.
+- 2025-05-18, unable to solve the bug of streamlit's file_uploader, so switched to using gradio for implementation.
+- 2025-05-08, implemented a simple webui interface using streamlit.

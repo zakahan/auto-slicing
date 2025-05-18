@@ -1,178 +1,200 @@
 import os
+import shutil
 import json
 import secrets
 import requests
-import streamlit as st
-from streamlit_option_menu import option_menu
+import gradio as gr
 from dotenv import load_dotenv
-
-# 加载.env文件中的环境变量
-load_dotenv()
 from parser.json_parser import json2dict, dict2json
 
-st.set_page_config(
-    page_title="☝️🤓💡切片神器（简陋版）",
-    layout="wide",
-)
-
-# content
+# 加载环境变量
+load_dotenv()
+# 加载主播选项
 options_dict = json2dict("introduction.json")
 options = list(options_dict.keys())
 
-# 在代码开头初始化 session_state
-if "submit" not in st.session_state:
-    st.session_state.submit = False
-if "item_list" not in st.session_state:
-    st.session_state.item_list = None
-if "introduction" not in st.session_state:
-    st.session_state.introduction = options_dict[options[0]]
-if "kb_base_path" not in st.session_state:
-    st.session_state.kb_base_path = os.getenv("KB_BASE_PATH")
-if "raw_path" not in st.session_state:
-    st.session_state.raw_path = None
+# Raw路径
+RAW_PATH = os.path.join(os.getenv("KB_BASE_PATH"), "raw")
+
+from gradio.themes import Monochrome
 
 
-def upload_file_in_chunks(file_path, chunk_size=1024 * 1024 * 5):  # 5MB 每块
-    API_URL = "http://127.0.0.1:8090/uploadfile/"
-    file_name = os.path.basename(file_path)
-    total_size = os.path.getsize(file_path)
-    total_chunks = (total_size + chunk_size - 1) // chunk_size
-
-    progress_bar = st.progress(0)
-
-    with open(file_path, "rb") as file:
-        for chunk_number in range(1, total_chunks + 1):
-            chunk = file.read(chunk_size)
-            files = {"file": (file_name, chunk)}
-            data = {
-                "file_name": file_name,
-                "chunk_number": chunk_number,
-                "total_chunks": total_chunks
-            }
-            response = requests.post(API_URL, files=files, data=data)
-            if response.status_code != 200:
-                st.error(f"Error uploading chunk {chunk_number}: {response.text}")
-                return
-            progress = chunk_number / total_chunks
-            progress_bar.progress(progress)
-    raw_path = response.json()['path']
-    return raw_path
-
-def list_existing_file_list():
+def list_existing_files():
     API_URL = "http://127.0.0.1:8090/list-files"
     response = requests.get(API_URL)
     if response.status_code == 200:
-        # st.success(response.json())
         return list(response.json())
-    
-
-def submit_root_processor():
-    API_URL =  "http://127.0.0.1:8090/submit"
-    response = requests.post(
-        API_URL,
-        json={
-            'task_id': secrets.token_hex(4),
-            'raw_path': st.session_state.raw_path,
-            'introduction': st.session_state.introduction
-        }
-        )
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return {}
-
-def get_video_mime_type(path):
-    """根据文件路径获取视频MIME类型（常见格式映射）"""
-    if not path:
-        return "video/mp4"  # 默认格式
-    ext = os.path.splitext(path)[1].lower().lstrip('.')  # 获取扩展名并去除点号
-    mime_map = {
-        "mp4": "video/mp4",
-        "avi": "video/x-msvideo",
-        "mov": "video/quicktime",
-        "mkv": "video/x-matroska",
-        "flv": "video/x-flv",
-        "wmv": "video/x-ms-wmv"
-    }
-    return mime_map.get(ext, "video/mp4")  # 未知格式默认使用mp4
-    
-
-menu1 = 'upload'
-menu2 = 'existing'
-# state group
-with st.sidebar:
-    st.title("☝️🤓💡切片剪辑神器")
-    if st.button("✅开始处理流程", disabled=st.session_state.raw_path is None):
-        st.session_state.submit = True  # 点击时将状态设为 True
-
-    menu = option_menu("视频读取方式", [menu1, menu2],
-                    icons=['upload', "chat-square-text"],
-                    menu_icon="wrench-adjustable", default_index=0)
-
-    # 介绍选择
-    selected_option = st.selectbox("🔘请选择一个当前的主播id", options, index=0)
+    return []
 
 
-    st.session_state.introduction = options_dict[selected_option]
-    st.divider()  # 插入分割线
+def save_uploaded_file(file_obj):
+    # 定义你的目标路径（例如：当前目录下的 uploaded_files 文件夹）
+    custom_dir = RAW_PATH
+    os.makedirs(custom_dir, exist_ok=True)  # 确保目录存在
+    # 生成目标路径
+    target_path = os.path.join(custom_dir, os.path.basename(file_obj.name))
+    # 将文件从临时路径复制到自定义路径
+    shutil.copy(file_obj.name, target_path)
 
-    if menu == menu1:
-        # st.session_state.raw_path = None
-        # 输入路径
-        uploaded_file = st.file_uploader("🔼上传视频文件", type=["mp4", "avi", "mov"])
+    # 删除临时文件（Gradio 上传的临时路径）
+    if os.path.exists(file_obj.name):  # 检查文件是否存在（避免异常）
+        os.remove(file_obj.name)  # 删除临时文件
+    file_path = f"raw/{os.path.basename(file_obj.name)}"
+    return file_path, file_path
 
-        if uploaded_file is not None:
-            file_path = os.path.join(os.getcwd(), uploaded_file.name)
-            with open(file_path, "wb") as f:
-                f.write(uploaded_file.getbuffer())
-            if st.button("上传文件"):
-                st.session_state.raw_path = upload_file_in_chunks(file_path)
-                os.remove(file_path)
-    else:
-        raw_path_list = list_existing_file_list()
-        # st.markdown(raw_path_list)
-        st.session_state.raw_path = st.selectbox("👀请从已经存在的文件中选择", raw_path_list)
-        
-    
-    
-if st.session_state.raw_path is not None:
 
-    fixed_height = "50px"
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(
-            f'**选定路径**： {st.session_state.raw_path if st.session_state.raw_path is not None else ""}'
-        )
-    with col2:
-        st.markdown(
-            f'**选定主播**： {selected_option}'
-        )
-if st.session_state.submit:
-    if st.session_state.item_list is None:
-        st.session_state.item_list = submit_root_processor()
-    # st.success(st.session_state.item_list)
-    for i, item in enumerate(st.session_state.item_list):
-        # def callback(path=item["path"]):  # 使用默认参数捕获当前的 item["path"]
+with gr.Blocks(title="☝️🤓💡切片神器", theme=Monochrome()) as demo:
+    gr.Markdown("# ☝️🤓💡切片剪辑神器")
+    # 处理按钮
+    process_btn = gr.Button("✅开始处理", interactive=False)
+    uploaded_file_state = gr.State("")
+    with gr.Column():
+        # 文件上传选项卡
+        with gr.Tab("上传新文件") as upload_tab:
+            upload_input = gr.File(label="上传视频文件")
+            # 初始化保存按钮为隐藏状态
+            save_btn = gr.Button("保存文件", visible=False)
+
+        # 现有文件选项卡
+        with gr.Tab("选择现有文件") as existing_tab:
+            existing_files = gr.Dropdown(
+                choices=[],
+                label="选择已存在的文件",
+                interactive=True
+            )
+            existing_tab.select(
+                fn=lambda: gr.update(choices=list_existing_files()),  # 关键：每次切换时重新获取文件列表
+                outputs=existing_files  # 更新下拉菜单的选项
+            )
+            pass
             
-        with st.expander(f"{i}_{item['title']}"):
-            sub_col1, sub_col2 = st.columns([9,1])
-            
-            with sub_col2:
-                video_source_id = f"vid_{item['path']}"
-                tog = st.toggle('📽️', key=video_source_id)
-                # todo: 这里展示视频
-            with sub_col1:
-                if tog:
-                    st.markdown(" ovo")
-                else:
-                    st.markdown(" x_x")
-            if tog:
-                st.session_state.video_path = item['path']
-                video_format = get_video_mime_type(st.session_state.video_path)
-                st.video(st.session_state.video_path, format=video_format)
+
+        # 结果显示
+        file_path_output = gr.Textbox(label="文件路径")
+        save_btn.click(
+            fn=save_uploaded_file,
+            inputs=upload_input,
+            outputs=[file_path_output, uploaded_file_state]
+        )
+
+        existing_files.change(
+            fn=lambda x: x,  # 直接返回选中的文件路径
+            inputs=existing_files,
+            outputs=file_path_output  # 输出到文件路径显示框
+        )
+
+        # 上传选项卡切换事件：显示最近上传的文件路径
+        upload_tab.select(
+            fn=lambda x: x,
+            inputs=uploaded_file_state,
+            outputs=file_path_output
+        )
+
+        # 现有文件选项卡切换事件：显示选中的文件
+        existing_tab.select(
+            fn=lambda x: x,
+            inputs=existing_files,
+            outputs=file_path_output
+        )
+
+        # 当文件上传内容变化时显示保存按钮
+        upload_input.change(
+            # 使用gr.update()返回组件更新状态
+            fn=lambda x: gr.update(visible=True) if x is not None else gr.update(visible=False),
+            inputs=upload_input,
+            outputs=save_btn  # 直接指向按钮组件本身
+        )
+        # end of gr column
+    with gr.Column():
+        # 主播选择
+        streamer_introduction = gr.State("")
+        streamer_select = gr.Dropdown(
+            interactive=True,
+            choices=options,
+            value=options[0],
+            label="选择主播ID",
+
+        )
+        # -----------------------
+        streamer_select.change(
+            fn=lambda x: options_dict[x],  # 添加处理函数：返回选中的值
+            inputs=streamer_select,  # 指定输入为下拉框组件
+            outputs=streamer_introduction  # 输出到文本框
+        )
+
+
+        # 条件检查函数
+        def check_process_conditions(file_path, streamer_info):
+            return gr.update(interactive=bool(file_path and streamer_info))
+
+
+        # 监听文件路径变化
+        file_path_output.change(
+            fn=check_process_conditions,
+            inputs=[file_path_output, streamer_introduction],
+            outputs=process_btn
+        )
+
+        # 监听主播介绍变化
+        streamer_introduction.change(
+            fn=check_process_conditions,
+            inputs=[file_path_output, streamer_introduction],
+            outputs=process_btn
+        )
+
+
+        # 处理按钮点击事件
+        def submit_root_processor(file_path, streamer_info):
+            API_URL = "http://127.0.0.1:8090/submit"
+            response = requests.post(
+                API_URL,
+                json={
+                    'task_id': secrets.token_hex(4),
+                    'raw_path': file_path,
+                    'introduction': streamer_info
+                }
+            )
+            if response.status_code == 200:
+                return response.json()
             else:
-                pass
-
-    pass
+                return {}
 
 
+        process_result = gr.State([])
+
+        process_btn.click(
+            fn=submit_root_processor,
+            inputs=[file_path_output, streamer_introduction],
+            outputs=process_result
+        )
+
+    with gr.Column() as result_links:
+        # 此处修改：使用Markdown组件来显示结果
+        result_display = gr.Markdown()
+
+
+    def update_result_columns(results):
+        # 此处修改：生成组合的Markdown内容
+        if not results:
+            return ""
+
+        output = []
+        for idx, res in enumerate(results, 1):
+            content = "\n".join([f"- {k}: {v}\n" for k, v in res.items()])
+            output.append(f"""\n### 切片结果 {idx}\n{content}""")
+
+        return "处理结束" + "\n\n".join(output)
+
+
+    # 此处修改：更新change事件指向Markdown组件
+    process_result.change(
+        fn=update_result_columns,
+        inputs=process_result,
+        outputs=result_display
+    )
+
+if __name__ == "__main__":
+    demo.launch(
+        server_name="127.0.0.1",
+        server_port=7860
+    )

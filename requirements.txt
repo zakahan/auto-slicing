@@ -1,8 +1,7 @@
 torch==2.7.0
 torchaudio==2.7.0
 torchvision==0.22.0
-streamlit==1.45.0
-streamlit-option-menu==0.4.0
+gradio==5.29.1
 funasr==1.2.6
 google-adk==0.3.0
 litellm==1.67.2

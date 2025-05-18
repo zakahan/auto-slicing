@@ -52,6 +52,12 @@ uv pip install -r requirements.txt
 pip install -r requirements.txt
 ```
 
+注：如果安装过程中报了pillow的错误
+可以
+```bash
+sudo apt-get install -y libjpeg-dev zlib1g-dev
+```
+
 
 
 #### 1.3 配置ffmpeg
@@ -143,7 +149,7 @@ bash start_up.sh
 
 ## ✅Todo List
 
-- [x] 图形化界面，考虑用streamlit做一个图形化界面
+- [ ] 增加prompt切换，实现片头片尾的支持
 - [ ] 实现对asr api的支持，脱离本地推理限制
 - [ ] 扩展`vedit-mcp`，目前仅支持基本的剪辑功能，需要继续提供支持
 - [ ] 增加添加字幕功能
@@ -157,4 +163,5 @@ bash start_up.sh
 
 ## 🔥Latest News
 
+- 2025-05-18, 无法解决streamlit的file_uploader bug，改用gradio实现
 - 2025-05-08, 使用streamlit实现了简易的webui界面
