@@ -20,14 +20,12 @@ AGENT_INSTRUCTION = """
 3. 招笑瞳姐觉得自己穿过的衣服能卖2w一件🤣【星瞳】
 4. 瞳姐难绷互联网大厂员工不知道工作站电脑开机键在哪【星瞳】
 """
-
-
 # 此处特别致谢恨也迷人，偷了几个标题，用来给LLM参考学习
 
 
 def get_analysis_prompt(content: str, introduction: str, key: str = 'easy'):
     match key:
-        case WorkflowType.EASY:
+        case WorkflowType.EASY | WorkflowType.WITH_START:
             front_prompt = textwrap.dedent(
                 f"""
                 ### 你的返回内容应该采取如下的形式

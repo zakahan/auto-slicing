@@ -64,8 +64,8 @@ def get_logger():
     
 
     if LOGGER_FILE_DIR is None:
-        raise ValueError("`logger_file_dir` Error: If you set `using_logger` to `True`, then you must configure " \
-        "the argument variable `logger_file_dir` and " \
+        raise ValueError("`logger_file_dir` Error: If you set `using_logger` to `True`, then you must configure "
+        "the argument variable `logger_file_dir` and "
         "ensure that this directory already exists. ")
 
     elif not os.path.exists(os.path.abspath(LOGGER_FILE_DIR)):
@@ -82,8 +82,8 @@ def get_logger():
 # Check the path
 def check_paths():
     if KB_DIR is None:
-        raise ValueError("`kb_dir` Error: KB_DIR is None, you must configure the argument variable " \
-        "KB_DIR and ensure that this path truly exists. The function of this path is to " \
+        raise ValueError("`kb_dir` Error: KB_DIR is None, you must configure the argument variable "
+        "KB_DIR and ensure that this path truly exists. The function of this path is to "
         "store the original video files, temporary files, and result files.")
     
     elif not os.path.exists(os.path.abspath(KB_DIR)):
@@ -129,6 +129,7 @@ def clip_video(
     :param save_folder: The path of the folder where the cut video will be saved.
     :param start_time: The start time for cutting (in seconds; this time unit is sufficient for most operations).
     :param stop_time: The end time for cutting (in seconds).
+    :param title: The title of cutting.
     :return: A tuple where the first element is a boolean indicating whether the operation was successful, 
                 the second element is the output location, and the third element is the log information.
     """

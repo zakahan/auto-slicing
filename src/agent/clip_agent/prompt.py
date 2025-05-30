@@ -16,34 +16,51 @@ def get_clip_prompt(query: dict, key: str) -> str:
     match key:
         case WorkflowType.EASY:
             prompt = (
-                f"你需要对一段视频执行剪辑操作，要求如下\n" +
-                f"在原素材上切分出一段视频，随后修改标题，要求全过程都使用工具完成。\n" +
-                f"参数如下：\n" +
-                f"1. origin_video_path: {query['origin_video_path']}：\n" +
-                f"2. task_id: {query['task_id']}\n" +
-                f"3. start_time:{query['start_time']}\n" +
-                f"4. stop_time:{query['stop_time']}\n" +
-                f"5. title: {query['title']} \n" +
+                f"你需要对一段视频执行剪辑操作，要求如下\n"
+                f"在原素材上切分出一段视频，随后修改标题，要求全过程都使用工具完成。\n"
+                f"参数如下：\n"
+                f"1. origin_video_path: {query['origin_video_path']}：\n"
+                f"2. task_id: {query['task_id']}\n"
+                f"3. start_time:{query['start_time']}\n"
+                f"4. stop_time:{query['stop_time']}\n"
+                f"5. title: {query['title']} \n"
+                f"请完成剪辑任务，注意，每次任务结束后，都要调用任务结束对应的工具。"
+            )
+        case WorkflowType.WITH_START:
+            prompt = (
+                f"你需要对一段视频执行剪辑操作，要求如下\n"
+                f"一共两次操作\n"
+                f"### 第一次操作:"
+                f"在原素材上切分出一段视频，随后修改标题，要求全过程都使用工具完成。\n"
+                f"参数如下：\n"
+                f"1. origin_video_path: {query['origin_video_path']}：\n"
+                f"2. task_id: {query['task_id']}\n"
+                f"3. start_time:{query['start_time']}\n"
+                f"4. stop_time:{query['stop_time']}\n"
+                f"5. title: {query['title']} \n"
+                f"### 第二次操作\n"
+                f"对刚刚剪切好的视频添加片头，片头的地址如下:\n"
+                f"sequence_video_path: {query['sequence_video_path']}\n"
                 f"请完成剪辑任务，注意，每次任务结束后，都要调用任务结束对应的工具。"
             )
         case WorkflowType.TWO_STEP:
             prompt = (
-                f"你需要对一段视频执行剪辑操作，要求如下\n" +
-                f"先在原素材上切分出两段视频，随后按顺序合并。\n" +
-                f"参数如下：\n" +
-                f"1. origin_video_path: {query['origin_video_path']}：\n" +
-                f"2. 第一段视频\n" +
-                f"    2.1 task_id: {query['clip'][0]['task_id']}\n" +
-                f"    2.2. start_time:{query['clip'][0]['start_time']}\n" +
-                f"    2.3. stop_time:{query['clip'][0]['stop_time']}\n" +
-                f"3. 第二段视频\n" +
-                f"    3.1 task_id: {query['clip'][1]['task_id']}\n" +
-                f"    3.2 start_time:{query['clip'][1]['start_time']}\n" +
-                f"    3.3 stop_time:{query['clip'][1]['stop_time']}\n" +
-                f"4. 合并两段视频\n" +
-                f"    4.1 task_id: {query['merge']['task_id']},\n" +
-                f"    4.2 video_paths: 请你根据前两段视频合并操作的结果来决定\n" +
-                f"5. 将视频重命名为\n" +
+                f"你需要对一段视频执行剪辑操作，要求如下\n"
+                f"先在原素材上切分出两段视频，随后按顺序合并。\n"
+                f"参数如下：\n"
+                f"1. origin_video_path: {query['origin_video_path']}：\n"
+                f"2. 第一段视频\n"
+                f"    2.1 task_id: {query['clip'][0]['task_id']}\n"
+                f"    2.2. start_time:{query['clip'][0]['start_time']}\n"
+                f"    2.3. stop_time:{query['clip'][0]['stop_time']}\n"
+                f"3. 第二段视频\n"
+                f"    3.1 task_id: {query['clip'][1]['task_id']}\n"
+                f"    3.2 start_time:{query['clip'][1]['start_time']}\n"
+                f"    3.3 stop_time:{query['clip'][1]['stop_time']}\n"
+                f"4. 合并两段视频\n"
+                f"    4.1 task_id: {query['merge']['task_id']},\n"
+                f"    4.2 video_paths: 请你根据前两段视频合并操作的结果来决定\n"
+                f"5. 将视频重命名为\n"
                 f"请完成剪辑任务\n"
             )
         case _:
