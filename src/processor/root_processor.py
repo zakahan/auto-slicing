@@ -40,7 +40,7 @@ class RootProcessor:
             res_list.extend(v_list)
         return res_list
 
-    async def run(self, query: dict) -> dict:
+    async def run(self, query: dict) -> list[dict]:
         task_id_list = []
         task_id = query['task_id']
         raw_video = query['raw_video']

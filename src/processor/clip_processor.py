@@ -1,4 +1,4 @@
-from agent.clip_agent import aget_clip_agent, get_clip_prompt
+from agent.clip_agent import get_clip_agent, get_clip_prompt
 from google.adk.runners import Runner
 from google.genai import types
 from google.adk.sessions import InMemorySessionService
@@ -27,7 +27,7 @@ class ClipProcessor:
         pass
 
     async def run(self, query: dict[str, Any], prompt_key: str='easy') -> str:
-        agent, exit_stack = await aget_clip_agent()
+        agent, tools = get_clip_agent()
 
         runner = Runner(
             app_name=self.app_name,
@@ -45,7 +45,7 @@ class ClipProcessor:
         async for event in events_async:
             logger.info(f"Event received: {str(event.content)}")
             if event.is_final_response():
-                await exit_stack.aclose()
+                await tools.close()
                 return event.content.parts[0].text
             pass
         return ""
