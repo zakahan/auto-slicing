@@ -58,10 +58,9 @@ class RootProcessor:
 
         # 分析阶段 ---------------------------------------------------------
         aly_pcr = AnalysisProcessor()
-        # aly_task_id_group = [f"{task_id}_aly_{i}" for i in range(len(asr_results['batch']))]
-        aly_results = []
+        aly_results = []        # list[str]
         for i in range(len(asr_results['batch'])):
-            aly = await aly_pcr.run(
+            aly = await aly_pcr.run(        # str
                 query={
                     'content': str(asr_results['batch'][i]),
                     'introduction': introduction
@@ -72,9 +71,8 @@ class RootProcessor:
             pass
 
         # 切片阶段 -----------------------------------------------------------
-        # FIXME：这里再添加一步，根据srt_success和is_create_subtitles，来判断使用什么样的prompt
         clp_prc = ClipProcessor()
-        prompt_clp_task_query = []
+        prompt_clp_task_query = []      # 这里是分歧点
 
         for aly_res in aly_results:
             try:
@@ -82,20 +80,15 @@ class RootProcessor:
             except Exception as e:
                 logger.error("json_repair error" + str(e))
 
-        for i, clp_task in enumerate(prompt_clp_task_query):
-            if not all(key in clp_task for key in ('start_time', 'stop_time', 'title')):
-                # 缺了字段就跳过，并且记录
-                logger.error(f"clp_task阶段：本次有字段缺失问题，{clp_task.keys()}")
+        for i, query in enumerate(prompt_clp_task_query):
+            if not all(key in query for key in ('start_time', 'stop_time', 'title')):
+                logger.error(f"clp_task阶段：本次有字段缺失问题，{query.keys()}")
                 break
-            query = {
-                "origin_video_path": raw_video,
-                "task_id": f"{task_id}_{i}",
-                "start_time": clp_task["start_time"],
-                "stop_time": clp_task["stop_time"],
-                "title": clp_task['title']
-            }
+            task_id = f"{task_id}_{i}"
             task_id_list.append(f"{task_id}_{i}")
-            clp = await clp_prc.run(query, prompt_key=self.prompt_key)
+            clp = await clp_prc.run(
+                query, raw_video, task_id, prompt_key=self.prompt_key
+            )
             logger.info(f"{task_id}_{i}: {clp}")
             pass
 

@@ -26,7 +26,7 @@ class ClipProcessor:
         
         pass
 
-    async def run(self, query: dict[str, Any], prompt_key: str='easy') -> str:
+    async def run(self, query: dict[str, Any], origin_video_path: str, task_id: str, prompt_key: str='easy') -> str:
         agent, tools = get_clip_agent()
 
         runner = Runner(
@@ -35,7 +35,9 @@ class ClipProcessor:
             session_service=self.session_service
         )
 
-        prompt = get_clip_prompt(query=query, key=prompt_key)
+        prompt = get_clip_prompt(
+            query=query, origin_video_path=origin_video_path, task_id=task_id, key=prompt_key
+        )
         content = types.Content(role='user', parts=[types.Part(text=prompt)])
         events_async = runner.run_async(
             session_id=self.session_id,
