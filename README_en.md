@@ -113,7 +113,7 @@ Then you can access the Web UI.
 
 The overall architecture diagram is as follows.
 
-![](./assert/images/stream_en.png)
+![](assets/images/stream_en.png)
 
 For the specific implementation, you can directly refer to the `src/processor` part of the code. This is the entry point of each module, and the overall idea is very clear in the diagram.
 

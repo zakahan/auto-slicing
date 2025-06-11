@@ -139,7 +139,7 @@ bash start_up.sh
 
 整体架构图如下
 
-![](./assert/images/stream_cn.png)
+![](assets/images/stream_cn.png)
 
 具体直接看代码`src/processor`部分即可，这里是每个模块的入口，整体的思路在图上已经很清晰了。
 
