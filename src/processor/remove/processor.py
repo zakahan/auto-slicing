@@ -34,3 +34,9 @@ class RemoveProcessor(BaseProcessor):
                     output_list.append({'folder_path': _folder_path, 'status': 'failed', 'error': str(e)})
             pass
         return output_list
+
+
+class RemoveProcessorFactory(BaseProcessorFactory):
+    @classmethod
+    def create_processor(cls, **kwargs) -> RemoveProcessor:
+        return RemoveProcessor()

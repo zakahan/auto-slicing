@@ -1,4 +1,8 @@
 import os
+from typing import Optional
+
+from processor.base.processor import BaseProcessor, BaseProcessorFactory
+from processor.processor_type import ProcessorName, ProcessorType
 from utils.log_config import get_logger
 logger = get_logger()
 
@@ -28,13 +32,19 @@ def generate_srt_subtitle(subtitles, output_file) -> bool:
         return False
 
 
-class SubtitlesProcessor:
+class SubtitlesProcessor(BaseProcessor):
     def __init__(self):
+        super().__init__(
+            processor_name=ProcessorName.SUBTITLE,
+            processor_type=ProcessorType.WORKFLOW,
+            session_service=None,
+            memory_service=None,
+            stream=False,
+        )
         # 目前只支持生成srt文件
         self.srt_base_path = os.path.join(os.getenv("KB_BASE_PATH"), "srt")
-        pass
 
-    def run(self, query: dict) -> dict:
+    def run(self, query: dict, **kwargs) -> list[dict]:
         task_id = query['task_id']
         asr_list = query['asr_list']
         
@@ -57,5 +67,11 @@ class SubtitlesProcessor:
         # 生成字幕文件
         output_path = os.path.join(task_folder, "subtitles.srt")
         res = generate_srt_subtitle(srt_item_list, output_path)
-        return {"result":res, "output_path": output_path}
+        return [{"result":res, "output_path": output_path}]
+    
+
+class SubtitlesProcessorFactory(BaseProcessorFactory):
+    @classmethod
+    def create_processor(cls, **kwargs) -> SubtitlesProcessor:
+        return SubtitlesProcessor()
     

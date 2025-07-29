@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from parser.json_parser import json2dict
-from processor.root_processor import RootProcessor
+from processor.event_driven_processor import EventDrivenProcessor
 
 
 introduction= json2dict("introduction.json")
@@ -18,10 +18,10 @@ query = {
 }
 
 
-root_pcr = RootProcessor()
+event_driven_processor = EventDrivenProcessor()
 
 x= asyncio.run(
-    root_pcr.run(
+    event_driven_processor.run(
         query=query
     )
 )
