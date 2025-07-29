@@ -1,8 +1,15 @@
+from processor.analysis.processor import AnalysisProcessor
+from processor.asr.processor import ASRProcessor
+from processor.clip.processor import ClipProcessor
 from processor.processor_type import ProcessorName
+from processor.remove.processor import RemoveProcessor
+from processor.subtitles.processor import SubtitlesProcessor
+
 
 class ProcessorFactory:
     @classmethod
-    def create_processor(cls, processor_name: ProcessorName, **kwargs):
+    def create_processor(cls, processor_name: ProcessorName,
+                         **kwargs: object) -> SubtitlesProcessor | AnalysisProcessor | ClipProcessor | ASRProcessor | RemoveProcessor:
         match processor_name:
             case ProcessorName.CLIP:
                 from processor.clip.processor import ClipProcessorFactory

@@ -20,7 +20,7 @@ class RemoveProcessor(BaseProcessor):
             stream=False,
         )
 
-    def run(self, query: dict, **kwargs) ->list[dict]:
+    async def run(self, query: dict, **kwargs) ->list[dict]:
         # 删除query里面的元素
         output_list = []
         remove_queue = query['remove_queue']

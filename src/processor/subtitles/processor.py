@@ -44,7 +44,7 @@ class SubtitlesProcessor(BaseProcessor):
         # 目前只支持生成srt文件
         self.srt_base_path = os.path.join(os.getenv("KB_BASE_PATH"), "srt")
 
-    def run(self, query: dict, **kwargs) -> list[dict]:
+    async def run(self, query: dict, **kwargs) -> list[dict]:
         task_id = query['task_id']
         asr_list = query['asr_list']
         

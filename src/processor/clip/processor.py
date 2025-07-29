@@ -53,6 +53,12 @@ class ClipProcessor(BaseProcessor):
             )
         return output_list
 
+    async def process(self, queries: list[dict], **kwargs) -> list[dict]:
+        for query in queries:
+            # pre-check: check input format
+            # query change : 修改成需要的格式
+            await self.run(query, **kwargs)
+
 
 class ClipProcessorFactory(BaseProcessorFactory):
     @classmethod

@@ -2,17 +2,17 @@ import queue
 import threading
 from typing import Callable, Any
 
-from processor.processor_type import ProcessorType
+from processor.processor_type import ProcessorName
 
 
 class Task:
     def __init__(
             self,
-            processor_type: ProcessorType,
+            processor_name: ProcessorName,
             data: Any
 
     ):
-        self.processor_type = processor_type
+        self.processor_name = processor_name
         self.data = data
 
 # task队列
@@ -25,15 +25,15 @@ remove_queue = queue.Queue()
 # 2. 事件处理器注册机制（核心：通过事件类型映射到处理器）
 event_handlers = {}
 
-def register_handler(processor_type: ProcessorType, handler: Callable):
+def register_handler(processor_name: ProcessorName, handler: Callable):
     """注册事件处理器，当特定类型事件发生时调用"""
-    if processor_type not in event_handlers:
-        event_handlers[processor_type] = []
-    event_handlers[processor_type].append(handler)
+    if processor_name not in event_handlers:
+        event_handlers[processor_name] = []
+    event_handlers[processor_name].append(handler)
 
 def publish_task(task: Task):
     """发布事件，触发所有注册的处理器"""
-    print(f"发布事件: {task.processor_type}")
-    if task.processor_type in event_handlers:
-        for handler in event_handlers[task.processor_type]:
+    print(f"发布事件: {task.processor_name}")
+    if task.processor_name in event_handlers:
+        for handler in event_handlers[task.processor_name]:
             handler(task.data)
