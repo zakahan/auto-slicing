@@ -1,12 +1,10 @@
 import os
-from .asr_processor import ASRProcessor
-from .analysis_processor import AnalysisProcessor
-from .clip_processor import ClipProcessor
-from .subtitles_processor import SubtitlesProcessor
-from .remove_processor import RemoveProcessor
+from processor.asr.processor import ASRProcessor
+from processor.analysis.processor import AnalysisProcessor
+from processor.clip.processor import ClipProcessor
+from processor.remove.processor import RemoveProcessor
 from parser.json_parser import jsonl_fuzzy_parser
-import glob
-from log_config import get_logger
+from utils.log_config import get_logger
 
 logger = get_logger()
 

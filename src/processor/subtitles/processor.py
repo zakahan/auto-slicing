@@ -1,5 +1,5 @@
 import os
-from log_config import get_logger
+from utils.log_config import get_logger
 logger = get_logger()
 
 

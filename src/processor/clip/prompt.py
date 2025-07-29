@@ -1,4 +1,4 @@
-from utils.workflow_type import WorkflowType
+from processor.processor_type import WorkflowType
 
 AGENT_DESCRIPTION = """
 你是一个视频剪辑专家，你现在要做这样的一个任务：
