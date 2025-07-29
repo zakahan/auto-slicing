@@ -1,23 +1,30 @@
 import os
 
 from parser.asr.sv_local_parser import SVLocalParser
+from processor.base.processor import BaseProcessor, BaseProcessorFactory
+from processor.processor_type import ProcessorName, ProcessorType
 from utils.log_config import get_logger
+
 logger = get_logger()
 
 
 
-class ASRProcessor:
+class ASRProcessor(BaseProcessor):
     def __init__(self):
-        self.app_name = "asr_app"
+        super().__init__(
+            processor_name=ProcessorName.ASR,
+            processor_type=ProcessorType.WORKFLOW,
+            session_service=None,
+            memory_service=None,
+            stream=False,
+        )
         if os.getenv("ASR_BATCH_MAX_WINDOWS_SIZE") is None:
             self.max_windows_size = 5000  # 按这个数量切割task
         else:
             self.max_windows_size = int(os.getenv("ASR_BATCH_MAX_WINDOWS_SIZE"))
-        # 其实我感觉还得加个chunk_overlap的......
-        # 没啥要保存的
 
 
-    def run(self, query: dict) -> dict:
+    def run(self, query: dict, **kwargs) -> list[dict]:
         # 输入路径也要是基于KB的
         sv_parser = SVLocalParser()
         input_audio_path = os.path.join(sv_parser.kb_dir_path, query["input_audio"])
@@ -50,4 +57,11 @@ class ASRProcessor:
 
         # 结束之后补上
         result['batch'].append(p)
-        return result
+        return result       # fixme 这里的返回值需要修改
+
+
+
+class ASRProcessorFactory(BaseProcessorFactory):
+    @classmethod
+    def create_processor(cls, **kwargs) -> ASRProcessor:
+        return ASRProcessor()
