@@ -20,8 +20,11 @@ class RemoveProcessor(BaseProcessor):
             stream=False,
         )
 
-    async def run(self, query: dict, **kwargs) ->list[dict]:
+    async def run(self, queries: list[dict], **kwargs) ->list[dict]:
         # 删除query里面的元素
+        assert len(queries) == 1, "only support one query"
+        query = queries[0]
+
         output_list = []
         remove_queue = query['remove_queue']
         KB_DIR = os.getenv("KB_BASE_PATH")

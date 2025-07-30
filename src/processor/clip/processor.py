@@ -6,8 +6,9 @@ from google.adk.sessions import InMemorySessionService, BaseSessionService
 from google.adk.tools.base_toolset import BaseToolset
 
 from agent_kit.agent_factory import create_agent
+from parser.json_parser import jsonl_fuzzy_parser
 from processor.base.processor import BaseProcessor, BaseProcessorFactory
-from processor.clip.prompt import AGENT_DESCRIPTION, AGENT_INSTRUCTION
+from processor.clip.prompt import AGENT_DESCRIPTION, AGENT_INSTRUCTION, get_clip_prompt
 from processor.processor_type import ProcessorName, ProcessorType
 from tool.client.vedit.tools import get_video_editor_tools
 from utils.log_config import get_logger
@@ -37,27 +38,27 @@ class ClipProcessor(BaseProcessor):
             tools=tools,
         )
 
-    async def run(self, query: dict, **kwargs) -> list[dict]:
-        session_id = str(uuid.uuid4())  # generate a session id
-        assert self.session_service, "session_service is required"
-        # 初始化session
-        await self.create_session(session_id)
-        # 运行agent
-        prompt = query['prompt']
-        resp_list = await self._run_agent_single_turn(prompt, session_id)
-
+    async def run(self, queries: list[dict], **kwargs) -> list[dict]:
         output_list = []
-        for resp in resp_list:
-            output_list.append(
-                resp.model_dump()
-            )
-        return output_list
 
-    async def process(self, queries: list[dict], **kwargs) -> list[dict]:
         for query in queries:
-            # pre-check: check input format
-            # query change : 修改成需要的格式
-            await self.run(query, **kwargs)
+            prompt = get_clip_prompt(query)
+            completion = await self._run_agent_single_turn(prompt=prompt, **kwargs)
+            try:
+                output = jsonl_fuzzy_parser(completion[-1].content.text)
+            except Exception as e:
+                logger.error(f"analysis processor output is not jsonl format, error: {e}")
+                continue
+
+            # add outputs
+            if isinstance(output, dict):
+                output_list.append(output)
+            elif isinstance(output, list):
+                output_list.extend(output)
+            else:
+                logger.info(f"analysis processor output is not dict or list, output: {output}")
+
+        return output_list
 
 
 class ClipProcessorFactory(BaseProcessorFactory):

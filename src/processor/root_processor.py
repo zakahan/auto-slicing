@@ -47,7 +47,7 @@ class RootProcessor:
         # 语音识别阶段 ---------------------------------------------------------
         asr_pcr = ASRProcessor()
         asr_task_id = f"{task_id}_asr"
-        asr_results = asr_pcr.run(
+        asr_results = asr_pcr._run_agent(
             query={
                 "input_audio": raw_video,
                 "task_id": asr_task_id
@@ -58,7 +58,7 @@ class RootProcessor:
         aly_pcr = AnalysisProcessor()
         aly_results = []        # list[str]
         for i in range(len(asr_results['batch'])):
-            aly = await aly_pcr.run(        # str
+            aly = await aly_pcr._run_agent(        # str
                 query={
                     'content': str(asr_results['batch'][i]),
                     'introduction': introduction

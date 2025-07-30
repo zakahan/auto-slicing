@@ -24,7 +24,9 @@ class ASRProcessor(BaseProcessor):
             self.max_windows_size = int(os.getenv("ASR_BATCH_MAX_WINDOWS_SIZE"))
 
 
-    async def run(self, query: dict, **kwargs) -> list[dict]:
+    async def run(self, queries: list[dict], **kwargs) -> list[dict]:
+        assert len(queries) == 1, "ASR processor only supports one query"
+        query = queries[0]
         # 输入路径也要是基于KB的
         sv_parser = SVLocalParser()
         input_audio_path = os.path.join(sv_parser.kb_dir_path, query["input_audio"])

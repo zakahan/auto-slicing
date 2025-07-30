@@ -23,7 +23,10 @@ AGENT_INSTRUCTION = """
 # 此处特别致谢恨也迷人，偷了几个标题，用来给LLM参考学习
 
 
-def get_analysis_prompt(content: str, introduction: str, key: str = 'easy'):
+def get_analysis_prompt(query:dict, key: str = 'easy') -> str:
+    # content: str, introduction: str,
+    content = query['content']
+    introduction = query['introduction']
     match key:
         case WorkflowType.EASY | WorkflowType.WITH_START:
             front_prompt = textwrap.dedent(

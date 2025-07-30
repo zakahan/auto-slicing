@@ -12,7 +12,9 @@ AGENT_INSTRUCTION = """
 """
 
 
-def get_clip_prompt(query: dict, origin_video_path: str, task_id: str, key: str) -> str:
+def get_clip_prompt(query: dict, key: str) -> str:
+    origin_video_path = query['origin_video_path']
+    task_id = query['task_id']
     match key:
         case WorkflowType.EASY:
             prompt = (
