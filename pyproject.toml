@@ -4,4 +4,17 @@ version = "0.1.1"
 description = "auto slicing video stream."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastapi>=0.116.1",
+    "fastmcp>=2.11.3",
+    "funasr>=1.2.7",
+    "google-adk>=1.11.0",
+    "json-repair>=0.49.0",
+    "litellm>=1.75.7",
+    "loguru>=0.7.3",
+    "pydub>=0.25.1",
+    "python-multipart>=0.0.20",
+    "torch>=2.8.0",
+    "torchaudio>=2.8.0",
+    "torchvision>=0.23.0",
+]
