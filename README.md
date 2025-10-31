@@ -164,4 +164,10 @@ bash start_up.sh
 ## 🔥Latest News
 
 - 2025-05-18, 无法解决streamlit的file_uploader bug，改用gradio实现
+
 - 2025-05-08, 使用streamlit实现了简易的webui界面
+
+## 我的忏悔
+
+最近比较忙，当然这是次要原因，主要原因是我太懒，所以好久没更新了。
+目前这个方案整体上我不太满意，有生之年可能会更新，但短期内估计没有可能了。Orz
